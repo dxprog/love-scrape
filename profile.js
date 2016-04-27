@@ -10,6 +10,11 @@ const PERCENT_REGEX = /([\d]+)% Match/ig;
 const AGE_REGEX = /basics-asl-age\"\>([\d]+)\</ig;
 const LOCATION_REGEX = /basics-asl-location\"\>([^\<]+)\</ig;
 
+function getSingleMatch(regex, text) {
+  const match = regex.exec(text);
+  return match ? match[1] : null;
+}
+
 module.exports = function scrapeProfile(username) {
   return new Promise((resolve, reject) => {
     request.get({
@@ -22,7 +27,9 @@ module.exports = function scrapeProfile(username) {
         username
       };
       const images = body.match(PIC_THUMB_REGEX);
-      retVal.images = images.map((image) => image.replace('src="', '').replace('/225x225/225x225', '').replace('/2/', '/0/'));
+      if (images) {
+        retVal.images = images.map((image) => image.replace('src="', '').replace('/225x225/225x225', '').replace('/2/', '/0/'));
+      }
 
       let match;
       retVal.essays = {};
@@ -40,12 +47,9 @@ module.exports = function scrapeProfile(username) {
         retVal.similar.push(match[1].trim());
       }
 
-      match = PERCENT_REGEX.exec(body);
-      retVal.percent = match[1];
-      match = AGE_REGEX.exec(body);
-      retVal.age = match[1];
-      match = LOCATION_REGEX.exec(body);
-      retVal.location = match[1];
+      retVal.percent = getSingleMatch(PERCENT_REGEX, body);
+      retVal.age = getSingleMatch(AGE_REGEX, body);
+      retVal.location = getSingleMatch(LOCATION_REGEX, body);
 
       resolve(retVal);
     });
