@@ -1,0 +1,14 @@
+{
+  "name": "love-scrape",
+  "version": "0.0.1",
+  "description": "Some lame attempt at data compilation/analysis for OkCupid",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matt Hackmann",
+  "license": "WTFPL",
+  "dependencies": {
+    "request": "^2.72.0"
+  }
+}
